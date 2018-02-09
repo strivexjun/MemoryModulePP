@@ -27,6 +27,7 @@ BOOL LoadDllFromRes(PVOID *pDllData, DWORD *dwDllSize)
 
 int main()
 {
+
 	PVOID			pDllData = NULL;
 	DWORD			dwDllSize = 0;
 
