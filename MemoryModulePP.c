@@ -64,7 +64,7 @@ int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSiz
 WIN10 x86 and x64 (Build 10240)
 int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
 
-8B 85 18 FF FF FF 8B 70 50 8B D6 8B 8D 34 FF FF FF E8
+8B 85 ?? FF FF FF 8B 70 50 8B D6 8B 8D ?? FF FF FF E8
 
 .text:4B31E0CB 8B 85 18 FF FF FF                             mov     eax, [ebp+var_E8]
 .text:4B31E0D1 8B 70 50                                      mov     esi, [eax+50h]
@@ -674,8 +674,8 @@ InitFindExceptPrivateFunc()
 			0xD0, 0x89, 0x45, 0xF0, 0xE8
 		};
 		unsigned char	ida_chars3[] = {
-			0x8B, 0x85, 0x18, 0xFF, 0xFF, 0xFF, 0x8B, 0x70, 0x50,
-			0x8B, 0xD6, 0x8B, 0x8D, 0x34, 0xFF, 0xFF, 0xFF, 0xE8
+			0x8B, 0x85, 0x90, 0xFF, 0xFF, 0xFF, 0x8B, 0x70, 0x50,
+			0x8B, 0xD6, 0x8B, 0x8D, 0x90, 0xFF, 0xFF, 0xFF, 0xE8
 		};
 		if ((lResult = FindPattern(pNtdllCode, ida_chars1, uNtdllCodeSize, sizeof(ida_chars1))) != -1)
 		{
