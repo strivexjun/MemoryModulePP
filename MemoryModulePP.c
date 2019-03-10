@@ -36,6 +36,18 @@ int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSiz
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+WIN10 x86 and x64 (Build 17763)
+int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
+
+8B 45 FC 8B CF 8B 70 50 8B D6 E8
+
+.text:4B32F593 8B 45 FC                                      mov     eax, [ebp+var_4]
+.text:4B32F596 8B CF                                         mov     ecx, edi
+.text:4B32F598 8B 70 50                                      mov     esi, [eax+50h]
+.text:4B32F59B 8B D6                                         mov     edx, esi
+.text:4B32F59D E8 38 8D F8 FF                                call    _RtlInsertInvertedFunctionTable@8 ; RtlInsertInvertedFunctionTable(x,x)
+
+
 WIN10 x86 and x64 (Build 16299)
 int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
 
@@ -677,29 +689,44 @@ InitFindExceptPrivateFunc()
 			0x8B, 0x85, 0x90, 0xFF, 0xFF, 0xFF, 0x8B, 0x70, 0x50,
 			0x8B, 0xD6, 0x8B, 0x8D, 0x90, 0xFF, 0xFF, 0xFF, 0xE8
 		};
+		unsigned char	ida_chars4[] = {
+			0x8B, 0x45, 0xFC, 0x8B, 0xCF, 0x8B, 0x70, 0x50, 0x8B,
+			0xD6, 0xE8
+		};
+
 		if ((lResult = FindPattern(pNtdllCode, ida_chars1, uNtdllCodeSize, sizeof(ida_chars1))) != -1)
 		{
-			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + 0xE);
+			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars1));
 
 			pfnRtlInsertInvertedFunctionTable_Win8_Win10 = \
-				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + 0xD + 0x5 + lCallBuf);
+				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars1) - 1 + 0x5 + lCallBuf);
 		}
 		else if ((lResult = FindPattern(pNtdllCode, ida_chars2, uNtdllCodeSize, sizeof(ida_chars2))) != -1)
 		{
-			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + 0xE);
+			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars2));
 
 			pfnRtlInsertInvertedFunctionTable_Win8_Win10 = \
-				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + 0xD + 0x5 + lCallBuf);
+				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars2) - 1 + 0x5 + lCallBuf);
 		}
 		else if ((lResult = FindPattern(pNtdllCode, ida_chars3, uNtdllCodeSize, sizeof(ida_chars3))) != -1)
 		{
-			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + 0x12);
+			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars3));
 
 			pfnRtlInsertInvertedFunctionTable_Win8_Win10 = \
-				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + 0x11 + 0x5 + lCallBuf);
+				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars3) - 1 + 0x5 + lCallBuf);
+		}
+		else if ((lResult = FindPattern(pNtdllCode, ida_chars4, uNtdllCodeSize, sizeof(ida_chars4))) != -1)
+		{
+			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars4));
+
+			pfnRtlInsertInvertedFunctionTable_Win8_Win10 = \
+				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars4) - 1 + 0x5 + lCallBuf);
 		}
 		else
 		{
+#ifdef _DEBUG
+			__debugbreak();
+#endif // DEBUG
 			// not support;
 		}
 	}
