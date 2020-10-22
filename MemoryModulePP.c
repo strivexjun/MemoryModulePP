@@ -36,7 +36,41 @@ int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSiz
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-WIN10 x86 and x64 (Build 17763)
+WIN10 x86 and x64 (Build 19041) RleaseId:2004
+int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
+
+8B 85 14 FF FF FF 8B 70 50 8B D6 8B 8D F8 FE FF FF E8
+
+.text:4B32A5AB 8B 85 14 FF FF FF                             mov     eax, [ebp+var_EC]
+.text:4B32A5B1 8B 70 50                                      mov     esi, [eax+50h]
+.text:4B32A5B4 8B D6                                         mov     edx, esi
+.text:4B32A5B6 8B 8D F8 FE FF FF                             mov     ecx, [ebp+var_108]
+.text:4B32A5BC E8 BE E6 F8 FF                                call    _RtlInsertInvertedFunctionTable@8 ; RtlInsertInvertedFunctionTable(x,x)
+
+WIN10 x86 and x64 (Build 18363) RleaseId:1909
+int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
+
+8B 45 FC 8B CF 8B 70 50 8B D6 E8
+
+.text:6A2CF0BE 8B 45 FC                                      mov     eax, [ebp-4]
+.text:6A2CF0C1 8B CF                                         mov     ecx, edi
+.text:6A2CF0C3 8B 70 50                                      mov     esi, [eax+50h]
+.text:6A2CF0C6 8B D6                                         mov     edx, esi
+.text:6A2CF0C8 E8 48 C3 F5 FF                                call    _RtlInsertInvertedFunctionTable@8 ; RtlInsertInvertedFunctionTable(x,x)
+
+WIN10 x86 and x64 (Build 18362) RleaseId:1903
+int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
+
+8B 45 FC 8B CF 8B 70 50 8B D6 E8
+
+.text:4B32EE53 8B 45 FC                                      mov     eax, [ebp+var_4]
+.text:4B32EE56 8B CF                                         mov     ecx, edi
+.text:4B32EE58 8B 70 50                                      mov     esi, [eax+50h]
+.text:4B32EE5B 8B D6                                         mov     edx, esi
+.text:4B32EE5D E8 BB F0 F7 FF                                call    _RtlInsertInvertedFunctionTable@8 ; RtlInsertInvertedFunctionTable(x,x)
+
+
+WIN10 x86 and x64 (Build 17763) RleaseId:1809
 int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
 
 8B 45 FC 8B CF 8B 70 50 8B D6 E8
@@ -48,7 +82,7 @@ int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSiz
 .text:4B32F59D E8 38 8D F8 FF                                call    _RtlInsertInvertedFunctionTable@8 ; RtlInsertInvertedFunctionTable(x,x)
 
 
-WIN10 x86 and x64 (Build 16299)
+WIN10 x86 and x64 (Build 16299) RleaseId:1709
 int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
 
 8B 85 D4 FE FF FF 8B 70 50 8B D6 8B CB E8
@@ -60,7 +94,7 @@ int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSiz
 .text:4B327351 E8 42 7A FB FF                                call    _RtlInsertInvertedFunctionTable@8 ; RtlInsertInvertedFunctionTable(x,x)
 
 
-WIN10 x86 and x64 (Build 15036)
+WIN10 x86 and x64 (Build 15036) RleaseId:1703
 int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
 
 8B 45 F8 8B CE 8B 40 50 8B D0 89 45 F0 E8
@@ -73,7 +107,7 @@ int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSiz
 .text:4B32DFF9 E8 3E 2E FA FF                                call    _RtlInsertInvertedFunctionTable@8 ; RtlInsertInvertedFunctionTable(x,x)
 
 
-WIN10 x86 and x64 (Build 10240)
+WIN10 x86 and x64 (Build 10240) RleaseId:1507
 int __fastcall RtlInsertInvertedFunctionTable(PVOID BaseAddress, ULONG uImageSize)
 
 8B 85 ?? FF FF FF 8B 70 50 8B D6 8B 8D ?? FF FF FF E8
@@ -131,7 +165,7 @@ fnRtlInsertInvertedFunctionTable_Win7 pfnRtlInsertInvertedFunctionTable_Win7 = N
 typedef int(__fastcall* fnRtlInsertInvertedFunctionTable_Win8_Win10)(PVOID BaseAddress, ULONG uImageSize);
 fnRtlInsertInvertedFunctionTable_Win8_Win10 pfnRtlInsertInvertedFunctionTable_Win8_Win10 = NULL;
 
-typedef BOOLEAN(__cdecl* fnRtlAddFunctionTable64)(PVOID FunctionTable, DWORD EntryCount, DWORD64 BaseAddress);
+typedef BOOLEAN(__fastcall* fnRtlAddFunctionTable64)(PVOID FunctionTable, DWORD EntryCount, DWORD64 BaseAddress);
 fnRtlAddFunctionTable64 pfnRtlAddFunctionTable64 = NULL;
 
 static inline LONG
@@ -555,6 +589,7 @@ BuildImportTable(PMEMORYMODULE module)
 static VOID
 InsertExceptionTable(PMEMORYMODULE module)
 {
+	
 #if defined(_WIN64)
 
 	PIMAGE_DATA_DIRECTORY		pDataTable = \
@@ -572,21 +607,21 @@ InsertExceptionTable(PMEMORYMODULE module)
 #else
 	if (dwMajorVersion == 6 && dwMinorVersion == 1) //WIM7
 	{
-		if (pfnRtlInsertInvertedFunctionTable_Win7 != NULL);
+		if (pfnRtlInsertInvertedFunctionTable_Win7 != NULL)
 		{
 			pfnRtlInsertInvertedFunctionTable_Win7(LdrpInvertedFunctionTable, module->codeBase, module->headers->OptionalHeader.SizeOfImage);
 		}
 	}
 	else if (dwMajorVersion == 6 && dwMinorVersion == 3) //WIN8
 	{
-		if (pfnRtlInsertInvertedFunctionTable_Win8_Win10 != NULL);
+		if (pfnRtlInsertInvertedFunctionTable_Win8_Win10 != NULL)
 		{
 			pfnRtlInsertInvertedFunctionTable_Win8_Win10(module->codeBase, module->headers->OptionalHeader.SizeOfImage);
 		}
 	}
 	else if (dwMajorVersion == 10 && dwMinorVersion == 0) //WIN10
 	{
-		if (pfnRtlInsertInvertedFunctionTable_Win8_Win10 != NULL);
+		if (pfnRtlInsertInvertedFunctionTable_Win8_Win10 != NULL)
 		{
 			pfnRtlInsertInvertedFunctionTable_Win8_Win10(module->codeBase, module->headers->OptionalHeader.SizeOfImage);
 		}
@@ -646,7 +681,7 @@ InitFindExceptPrivateFunc()
 		lResult = FindPattern(pNtdllCode, ida_chars, uNtdllCodeSize, sizeof(ida_chars));
 		if (lResult != -1)
 		{
-			LdrpInvertedFunctionTable = (PVOID)(*(LONG*)((ULONG_PTR)pNtdllCode + lResult + 0x11));
+			LdrpInvertedFunctionTable = LongToPtr(*(LONG*)((ULONG_PTR)pNtdllCode + lResult + 0x11));
 			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + 0x16);
 
 
@@ -693,6 +728,11 @@ InitFindExceptPrivateFunc()
 			0x8B, 0x45, 0xFC, 0x8B, 0xCF, 0x8B, 0x70, 0x50, 0x8B,
 			0xD6, 0xE8
 		};
+		unsigned char	ida_chars5[] = {
+			0x8B, 0x85, 0x14, 0xFF, 0xFF, 0xFF, 0x8B, 0x70, 0x50,
+			0x8B, 0xD6, 0x8B, 0x8D, 0xF8, 0xFE, 0xFF, 0xFF, 0xE8
+		};
+
 
 		if ((lResult = FindPattern(pNtdllCode, ida_chars1, uNtdllCodeSize, sizeof(ida_chars1))) != -1)
 		{
@@ -721,6 +761,13 @@ InitFindExceptPrivateFunc()
 
 			pfnRtlInsertInvertedFunctionTable_Win8_Win10 = \
 				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars4) - 1 + 0x5 + lCallBuf);
+		}
+		else if ((lResult = FindPattern(pNtdllCode, ida_chars5, uNtdllCodeSize, sizeof(ida_chars5))) != -1)
+		{
+			lCallBuf = *(LONG*)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars5));
+
+			pfnRtlInsertInvertedFunctionTable_Win8_Win10 = \
+				(fnRtlInsertInvertedFunctionTable_Win8_Win10)((ULONG_PTR)pNtdllCode + lResult + sizeof(ida_chars5) - 1 + 0x5 + lCallBuf);
 		}
 		else
 		{
